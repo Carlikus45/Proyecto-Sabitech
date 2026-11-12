@@ -6,20 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('asistencias', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('reserva_id')->unique()->constrained('reservas')->restrictOnDelete();
+            $table->foreignId('registrada_por')->constrained('users')->restrictOnDelete();
+            $table->enum('metodo', ['qr', 'manual'])->default('qr');
+            $table->timestamp('registrada_at')->useCurrent();
+            $table->string('observaciones')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('asistencias');
