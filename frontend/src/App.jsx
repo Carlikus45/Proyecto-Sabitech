@@ -4,7 +4,7 @@ import FormularioLogin from './components/FormularioLogin';
 import MisReservas from './components/MisReservas';
 import './App.css';
 
-const API = 'http://127.0.0.1:8000/api';
+const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
 
 class App extends React.Component {
   constructor(props) {
@@ -94,7 +94,7 @@ class App extends React.Component {
     this.setState({ token: null, usuario: null, misReservas: [], vista: 'programa', mensaje: null });
   }
 
-  async reservar(charlaId) {
+    async reservar(charlaId) {
     this.setState({ reservandoId: charlaId, mensaje: null });
 
     try {
@@ -114,11 +114,16 @@ class App extends React.Component {
 
       if (respuesta.ok) {
         this.setState({ mensaje: { charlaId: charlaId, ok: true, texto: 'Reserva confirmada. Tu código es ' + datos.codigo + '.' } });
-        this.cargarMisReservas(this.state.token);
       } else {
-        this.setState({ mensaje: { charlaId: charlaId, ok: false, texto: datos.mensaje } });
+        let texto = datos.mensaje;
+        if (!texto) {
+          texto = 'Error del servidor (' + respuesta.status + '). Inténtalo más tarde.';
+        }
+        this.setState({ mensaje: { charlaId: charlaId, ok: false, texto: texto } });
       }
-      this.cargarCharlas();
+
+      await this.cargarMisReservas(this.state.token);
+      await this.cargarCharlas();
     } catch (error) {
       console.log(error);
       this.setState({ mensaje: { charlaId: charlaId, ok: false, texto: 'No se ha podido conectar con el servidor.' } });
@@ -126,8 +131,6 @@ class App extends React.Component {
 
     this.setState({ reservandoId: null });
   }
-
-  tieneReserva(charlaId) {
     for (let i = 0; i < this.state.misReservas.length; i++) {
       const reserva = this.state.misReservas[i];
       if (reserva.charla_id === charlaId && reserva.estado === 'confirmada') {
