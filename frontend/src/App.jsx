@@ -131,6 +131,8 @@ class App extends React.Component {
 
     this.setState({ reservandoId: null });
   }
+
+    tieneReserva(charlaId) {
     for (let i = 0; i < this.state.misReservas.length; i++) {
       const reserva = this.state.misReservas[i];
       if (reserva.charla_id === charlaId && reserva.estado === 'confirmada') {
