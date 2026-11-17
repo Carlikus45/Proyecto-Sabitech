@@ -33,3 +33,25 @@ main {
 .error {
   color: #b00020;
 }
+.menu {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 16px;
+}
+
+.menu button[aria-current="true"] {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.confirmar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.ok {
+  color: #1b7a2f;
+  font-weight: bold;
+}
