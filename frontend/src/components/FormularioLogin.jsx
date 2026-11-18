@@ -56,7 +56,8 @@ class FormularioLogin extends React.Component {
 
     return (
       <form className="formulario" onSubmit={(e) => this.enviar(e)} noValidate>
-        <h2>Iniciar sesión</h2>
+        <h2>Inicia sesión</h2>
+        <p className="formulario-ayuda">Necesitas una cuenta para reservar plaza.</p>
 
         <label htmlFor="email">Email</label>
         <input id="email" type="email" autoComplete="username"
@@ -69,8 +70,8 @@ class FormularioLogin extends React.Component {
         {error}
 
         <div className="botones">
-          <button type="submit" disabled={this.state.enviando}>{textoBoton}</button>
-          <button type="button" onClick={() => this.props.alCancelar()}>Cancelar</button>
+          <button className="boton" type="submit" disabled={this.state.enviando}>{textoBoton}</button>
+          <button className="boton boton-secundario" type="button" onClick={() => this.props.alCancelar()}>Cancelar</button>
         </div>
       </form>
     );

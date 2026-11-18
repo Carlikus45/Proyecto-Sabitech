@@ -1,33 +1,42 @@
 import React from 'react';
+import { fechaLarga, hora } from '../fechas';
 
 class MisReservas extends React.Component {
-  textoEstado(reserva) {
-    if (reserva.asistencia_registrada) {
-      return 'Asistencia registrada';
-    }
-    if (reserva.estado === 'cancelada') {
-      return 'Cancelada';
-    }
-    return 'Confirmada';
-  }
-
   render() {
-    if (this.props.reservas.length === 0) {
-      return <p>Todavía no tienes reservas.</p>;
+    const confirmadas = [];
+    for (let i = 0; i < this.props.reservas.length; i++) {
+      const reserva = this.props.reservas[i];
+      if (reserva.estado === 'confirmada') {
+        confirmadas.push(reserva);
+      }
+    }
+
+    if (confirmadas.length === 0) {
+      return (
+        <div className="vacio">
+          <p>Todavía no tienes reservas.</p>
+          <button className="boton" onClick={() => this.props.alVerPrograma()}>Ver el programa</button>
+        </div>
+      );
     }
 
     return (
-      <div className="lista">
-        {this.props.reservas.map((reserva) => (
-          <article key={reserva.id} className="tarjeta">
-            <h2>{reserva.titulo}</h2>
-            <p>{new Date(reserva.fecha).toLocaleDateString('es-ES')} · {reserva.hora_inicio.substring(0, 5)} - {reserva.hora_fin.substring(0, 5)}</p>
-            <p>Sala: {reserva.sala} · {reserva.ubicacion}</p>
-            <p>Código de reserva: <strong>{reserva.codigo}</strong></p>
-            <p className="plazas">Estado: {this.textoEstado(reserva)}</p>
-          </article>
+      <ul className="billetes">
+        {confirmadas.map((reserva) => (
+          <li key={reserva.id} className="billete">
+            <div className="billete-codigo">
+              <span className="billete-etiqueta">Código de reserva</span>
+              <strong>{reserva.codigo}</strong>
+            </div>
+            <div className="billete-info">
+              <h2>{reserva.titulo}</h2>
+              <p>{fechaLarga(reserva.fecha)}, de {hora(reserva.hora_inicio)} a {hora(reserva.hora_fin)}</p>
+              <p>{reserva.sala} ({reserva.ubicacion})</p>
+            </div>
+            <p className="billete-estado estado-confirmada">Confirmada</p>
+          </li>
         ))}
-      </div>
+      </ul>
     );
   }
 }
